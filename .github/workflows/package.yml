@@ -1,0 +1,77 @@
+name: Build Executables for macOS and Windows
+
+on:
+    workflow_dispatch:
+#  push:
+#    branches:
+#      - main  # or any other branch you want to trigger the build on
+
+
+jobs:
+  build_mac:
+    name: Build macOS App
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download FFmpeg Binary from GitHub Release
+        run: |
+            # Download the ffmpeg.exe binary from the release URL
+              curl -L -o ffmpeg https://github.com/L24Tran/Sub-gui/releases/download/ffmpeg/ffmpeg
+            # Make the ffmpeg binary executable
+             chmod +x ffmpeg
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9.20  # Set your desired Python version
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install py2app
+
+      - name: Bundle the app using py2app
+        run: |
+          python setup.py py2app
+
+      - name: Upload macOS app as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: macOS-App
+          path: dist/sub-gui.app
+
+  build_windows:
+    name: Build Windows Executable
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download FFmpeg Binary from GitHub Release
+        run: |
+          # Download the ffmpeg.exe binary from the release URL
+          curl -L -o ffmpeg.exe https://github.com/L24Tran/Sub-gui/releases/download/ffmpeg/ffmpeg.exe
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9.20  # Set your desired Python version
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Bundle the app using PyInstaller
+        run: |
+          pyinstaller --onefile --add-data "ffmpeg;ffmpeg" main.py
+
+      - name: Upload Windows exe as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-exe
+          path: dist/sub-gui.exe
