@@ -84,8 +84,9 @@ def burn_subs():
     # Generate the subtitle file if it doesn't exist
     srt_filename = selected_file + ".srt"
     if not os.path.exists(srt_filename):
-        print("SRT file does not exist. Please generate subtitles first.")
-        return
+        print("SRT file does not exist. Generating subtitles first.")
+        sub()
+    
 
     # Open a Save As dialog to select the output video file path
     output_file = fd.asksaveasfilename(defaultextension=".mp4",
@@ -126,12 +127,12 @@ mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
 
 # Settings for button column
 row_w = 0
-col_w = 1
-b_pady = 10
-b_padx = 5
+col_w = 0
+b_pady = (10,15)
+b_padx = 15
 b_sticky = EW
 # Settings for text/label/progress bar column 
-t_pady = 10
+t_pady = 20
 t_padx = 15
 t_sticky = W
 # Weight changes whether the rows/columns change when window size changes
@@ -143,22 +144,22 @@ root.rowconfigure(3, weight=row_w)
 
 # Building file selector for video input choice
 input_video_button = ttk.Button(root, text="Input video", command=select_file)
-input_video_button.grid(column=1, row=1, sticky=b_sticky, pady=b_pady, padx=b_padx)
+input_video_button.grid(column=1, row=1, sticky=b_sticky, pady=(10,10), padx=b_padx)
 
-generate_srt_button = ttk.Button(root, text="Generate SRT", command=sub)
-generate_srt_button.grid(column=1, row=2, sticky=b_sticky, pady=b_pady, padx=b_padx)
+generate_srt_button = ttk.Button(root, text="Generate SRT (optional)", command=sub)
+generate_srt_button.grid(column=1, row=2, sticky=b_sticky, pady=5, padx=b_padx)
 
 sub_video_button = ttk.Button(root, text="Generate subbed video", command=burn_subs)
-sub_video_button.grid(column=1, row=3, sticky=b_sticky, pady=b_pady, padx=b_padx)
+sub_video_button.grid(column=1, row=3, sticky=b_sticky, pady=(10,10), padx=b_padx)
 
 # Labels & progress bars 
 inputfile = StringVar(value='No input video selected')
 input_label = ttk.Label(root, textvariable=inputfile)
-input_label.grid(column=2, row=1, sticky = t_sticky, pady = t_pady, padx=t_padx)
+input_label.grid(column=2, row=1, sticky = t_sticky, pady = 0, padx=t_padx)
 
 
 
-sv_ttk.use_light_theme()
+sv_ttk.use_dark_theme()
 root.mainloop()
 
 # GUI works, need to bundle FFmpeg for both mac and windows, then setup git action to package for mac and windows 
