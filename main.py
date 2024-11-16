@@ -7,14 +7,23 @@ import srt
 from datetime import timedelta
 import subprocess
 import os
+import sys
 
 
 selected_file = ""
 
+# Set ffmpeg_path based on the OS
+if sys.platform == "win32":  # Windows
+    ffmpeg_path = os.path.join(os.path.dirname(__file__), 'ffmpeg', 'ffmpeg.exe')
+elif sys.platform == "darwin":  # macOS
+    ffmpeg_path = os.path.join(os.path.dirname(__file__), 'ffmpeg', 'ffmpeg')
+else:
+    raise FileNotFoundError("FFmpeg path not found. Please ensure ffmpeg is installed and in the system PATH.")  
+
 def select_file():
 # Select input video file to be subtitled
     global selected_file
-    selected_file = fd.askopenfilename()
+    selected_file = fd.askopenfilename(title="Select video file to subtitle")
     """ To auto sub without needing additional button
     if filename:  # Ensure a file was selected
     sub(filename) 
@@ -65,7 +74,7 @@ def burn_subs():
 
     # Construct the FFmpeg command to burn the subtitles into the video
     ffmpeg_command = [
-        "ffmpeg", 
+        ffmpeg_path, 
         "-i", selected_file,  # Input video
         "-i", srt_filename,  # Input subtitle file
         "-c:v", "libx264",  # Video codec
@@ -84,7 +93,7 @@ def burn_subs():
     except subprocess.CalledProcessError as e:
         print(f"Error burning subtitles into the video: {e}")
 
-
+# Setting up GUI 
 root = Tk()
 root.title("sub-gui")
 
@@ -105,3 +114,5 @@ sub_video_button = ttk.Button(root, text="Generate subbed video", command=burn_s
 sub_video_button.grid(columns=1, rows=3)
 
 root.mainloop()
+
+# GUI works, need to bundle FFmpeg for both mac and windows, then setup git action to package for mac and windows 
