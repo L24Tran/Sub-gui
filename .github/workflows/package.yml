@@ -1,10 +1,10 @@
 name: Build Executables for macOS and Windows
 
 on:
-    workflow_dispatch:
-#  push:
-#    branches:
-#      - main  # or any other branch you want to trigger the build on
+#    workflow_dispatch:
+  push:
+    branches:
+      - main  # or any other branch you want to trigger the build on
 
 
 jobs:
@@ -25,7 +25,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.9.20  # Set your desired Python version
+          python-version: 3.9  # Set your desired Python version
 
       - name: Install dependencies
         run: |
@@ -58,7 +58,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.9.20  # Set your desired Python version
+          python-version: 3.9  # Set your desired Python version
 
       - name: Install dependencies
         run: |
