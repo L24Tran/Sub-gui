@@ -29,13 +29,6 @@ jobs:
             
             # Extract the whisper.zip file (skip hidden files like __MACOSX)
             unzip whisper.zip -d whisper
-            
-            # Remove any unwanted __MACOSX folders and _ files created by macOS
-            find whisper -name "__MACOSX" -exec rm -rf {} \;
-            find whisper -name "._*" -exec rm -f {} \;
-            
-            # Verify the correct folder structure and files
-            ls -l whisper/whisper/assets/
            
 
       - name: Set up Python
@@ -78,10 +71,6 @@ jobs:
 
           # Extract whisper.zip into a specific directory
           Expand-Archive -Path whisper.zip -DestinationPath whisper
-
-          # Verify directory structure
-          dir whisper\whisper\assets
-
 
       - name: Set up Python
         uses: actions/setup-python@v4
