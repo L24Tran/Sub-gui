@@ -12,13 +12,22 @@ import sys
 
 selected_file = ""
 
-# Set ffmpeg_path based on the OS
+# Define the function to get the correct file paths in the bundled app
+def get_bundle_path(filename):
+    if getattr(sys, 'frozen', False):  # Running in a bundled executable
+        base_path = sys._MEIPASS  # This points to the temporary folder where PyInstaller extracted files
+    else:  # Running in development mode
+        base_path = os.path.dirname(__file__)  # Current directory of the script
+    return os.path.join(base_path, filename)
+
+
+# Set ffmpeg_path based on the platform and bundle
 if sys.platform == "win32":  # Windows
-    ffmpeg_path = os.path.join(os.path.dirname(__file__), 'ffmpeg', 'ffmpeg.exe')
+    ffmpeg_path = get_bundle_path('ffmpeg/ffmpeg.exe')
 elif sys.platform == "darwin":  # macOS
-    ffmpeg_path = os.path.join(os.path.dirname(__file__), 'ffmpeg', 'ffmpeg')
+    ffmpeg_path = get_bundle_path('ffmpeg/ffmpeg')
 else:
-    raise FileNotFoundError("FFmpeg path not found. Please ensure ffmpeg is installed and in the system PATH.")  
+    raise FileNotFoundError("FFmpeg path not found. Please ensure FFmpeg is bundled with the executable.")
 
 def select_file():
 # Select input video file to be subtitled
