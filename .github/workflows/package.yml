@@ -22,6 +22,16 @@ jobs:
             # Make the ffmpeg binary executable
              chmod +x ffmpeg
 
+      - name: Download Whisper Assets from GitHub Release
+        run: |
+           # Set the URL for your whisper assets zip file in the GitHub release
+           curl -L -o whisper.zip https://github.com/L24Tran/Sub-gui/releases/download/ffmpeg/whisper.zip
+           # Unzip the whisper assets
+           unzip whisper.zip -d whisper
+           # Verify the directory structure
+           ls -l whisper/assets
+           
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -35,7 +45,7 @@ jobs:
 
       - name: Bundle the app using PyInstaller
         run: |
-          pyinstaller --onefile --add-data=ffmpeg:ffmpeg main.py
+          pyinstaller --onefile --add-data=ffmpeg:ffmpeg --add-date=whisper/assets/*:whisper/assets main.py
 
       - name: Upload macOS app as artifact
         uses: actions/upload-artifact@v4
@@ -55,6 +65,15 @@ jobs:
           # Download the ffmpeg.exe binary from the release URL
           curl -L -o ffmpeg.exe https://github.com/L24Tran/Sub-gui/releases/download/ffmpeg/ffmpeg.exe
 
+      - name: Download Whisper Assets from GitHub Release
+        run: |
+          # Set the URL for your whisper assets zip file in the GitHub release
+          curl -L -o whisper.zip https://github.com/L24Tran/Sub-gui/releases/download/ffmpeg/whisper.zip 
+          # Unzip the whisper assets using PowerShell's Expand-Archive
+          powershell -Command "Expand-Archive -Path whisper.zip -DestinationPath whisper"
+          # Verify the directory structure
+          dir whisper\assets
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -68,7 +87,7 @@ jobs:
 
       - name: Bundle the app using PyInstaller
         run: |
-          pyinstaller --onefile --add-data=ffmpeg.exe:ffmpeg main.py
+          pyinstaller --onefile --add-data=ffmpeg.exe:ffmpeg --add-date=whisper/assets/*:whisper/assets main.py
 
       - name: Upload Windows exe as artifact
         uses: actions/upload-artifact@v4
