@@ -29,7 +29,7 @@ jobs:
            # Unzip the whisper assets
            unzip whisper.zip -d whisper
            # Verify the directory structure
-           ls -l whisper/assets
+           ls -l whisper/assets/
            
 
       - name: Set up Python
@@ -72,7 +72,7 @@ jobs:
           # Unzip the whisper assets using PowerShell's Expand-Archive
           powershell -Command "Expand-Archive -Path whisper.zip -DestinationPath whisper"
           # Verify the directory structure
-          dir whisper\assets
+          dir whisper\assets\
 
       - name: Set up Python
         uses: actions/setup-python@v4
