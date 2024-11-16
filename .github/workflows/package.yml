@@ -41,7 +41,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: macOS-App
-          path: dist/main.app
+          path: dist/main
 
   build_windows:
     name: Build Windows Executable
