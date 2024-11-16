@@ -9,6 +9,9 @@ import subprocess
 import os
 import sys
 
+import sv_ttk
+
+
 
 selected_file = ""
 
@@ -29,6 +32,11 @@ elif sys.platform == "darwin":  # macOS
 else:
     raise FileNotFoundError("FFmpeg path not found. Please ensure FFmpeg is bundled with the executable.")
 
+# Function to check if the file type is allowed
+ALLOWED_EXTENSIONS = ['.mp4', '.avi', '.mov', '.mkv']
+def allowed_file(filename):
+    return any(filename.endswith(ext) for ext in ALLOWED_EXTENSIONS)
+
 def select_file():
 # Select input video file to be subtitled
     global selected_file
@@ -37,6 +45,12 @@ def select_file():
     if filename:  # Ensure a file was selected
     sub(filename) 
     """
+    if allowed_file(selected_file):
+        inputfile.set('Input video: '+os.path.basename(selected_file))
+    else:
+        inputfile.set(f"Invalid file type. Please select a file with one of the following extensions: {', '.join(ALLOWED_EXTENSIONS)}")
+   
+    
 
 def sub():
 # Transcribe and translate using whisper
@@ -109,19 +123,42 @@ root.title("sub-gui")
 # Setting up main window of gui
 mainframe = ttk.Frame(root, padding=(10,20))
 mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
-root.columnconfigure(0, weight=1)
-root.rowconfigure(0, weight=1)
+
+# Settings for button column
+row_w = 0
+col_w = 1
+b_pady = 10
+b_padx = 5
+b_sticky = EW
+# Settings for text/label/progress bar column 
+t_pady = 10
+t_padx = 15
+t_sticky = W
+# Weight changes whether the rows/columns change when window size changes
+root.columnconfigure(1, weight=0)
+root.columnconfigure(2, weight=col_w)
+root.rowconfigure(1, weight=row_w)
+root.rowconfigure(2, weight=row_w)
+root.rowconfigure(3, weight=row_w)
 
 # Building file selector for video input choice
 input_video_button = ttk.Button(root, text="Input video", command=select_file)
-input_video_button.grid(columns=1, rows=1)
+input_video_button.grid(column=1, row=1, sticky=b_sticky, pady=b_pady, padx=b_padx)
 
 generate_srt_button = ttk.Button(root, text="Generate SRT", command=sub)
-generate_srt_button.grid(columns=1, rows=2)
+generate_srt_button.grid(column=1, row=2, sticky=b_sticky, pady=b_pady, padx=b_padx)
 
 sub_video_button = ttk.Button(root, text="Generate subbed video", command=burn_subs)
-sub_video_button.grid(columns=1, rows=3)
+sub_video_button.grid(column=1, row=3, sticky=b_sticky, pady=b_pady, padx=b_padx)
 
+# Labels & progress bars 
+inputfile = StringVar(value='No input video selected')
+input_label = ttk.Label(root, textvariable=inputfile)
+input_label.grid(column=2, row=1, sticky = t_sticky, pady = t_pady, padx=t_padx)
+
+
+
+sv_ttk.use_light_theme()
 root.mainloop()
 
 # GUI works, need to bundle FFmpeg for both mac and windows, then setup git action to package for mac and windows 
