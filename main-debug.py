@@ -26,10 +26,8 @@ def get_bundle_path(filename):
 
 
 # Set ffmpeg_path based on the platform and bundle
-if sys.platform == "win32":  # Windows
-    ffmpeg_path = get_bundle_path('\\ffmpeg\\ffmpeg\\bin\\ffmpeg.exe')
-elif sys.platform == "win64":  # Windows
-    ffmpeg_path = get_bundle_path('\\ffmpeg\\ffmpeg\\bin\\ffmpeg.exe')
+if sys.platform == "win32" or sys.platform == "win64":  # Windows
+    ffmpeg_path = get_bundle_path('ffmpeg\\ffmpeg\\bin\\ffmpeg.exe')
 elif sys.platform == "darwin":  # macOS
     ffmpeg_path = get_bundle_path('ffmpeg/ffmpeg')
 else:
@@ -66,7 +64,7 @@ import logging
 import traceback
 
 # Set up logging to log detailed error information to a file
-logging.basicConfig(filename="app_debug.log", level=logging.DEBUG)
+#logging.basicConfig(filename="app_debug.log", level=logging.DEBUG)
 
 def log_error(message):
     print(message)  # Still print to console
