@@ -24,7 +24,7 @@ def get_bundle_path(filename):
         base_path = os.path.dirname(__file__)  # Current directory of the script
     return os.path.join(base_path, filename)
 
-
+"""
 # Set ffmpeg_path based on the platform and bundle
 if sys.platform == "win32" or sys.platform == "win64":  # Windows
     ffmpeg_path = get_bundle_path('ffmpeg\\ffmpeg\\bin\\ffmpeg.exe')
@@ -33,6 +33,29 @@ elif sys.platform == "darwin":  # macOS
 else:
     srt_prog_txt.set("FFmpeg path not found. Issue with bundling.")
     raise FileNotFoundError("FFmpeg path not found. Please ensure FFmpeg is bundled with the executable.")
+"""
+
+def extract_ffmpeg():
+    if sys.platform == "win32" or sys.platform == "win64":  # Windows
+        # The relative path where FFmpeg is bundled within the PyInstaller package
+        ffmpeg_bin = get_bundle_path('ffmpeg\\ffmpeg\\bin\\ffmpeg.exe')
+        
+        if not os.path.exists(ffmpeg_bin):
+            raise FileNotFoundError(f"FFmpeg executable not found at expected location: {ffmpeg_bin}")
+
+        # Create a temporary directory to store FFmpeg
+        temp_dir = tempfile.mkdtemp()
+        ffmpeg_temp_path = os.path.join(temp_dir, 'ffmpeg.exe')
+
+        # Copy FFmpeg executable to the temp folder
+        shutil.copy(ffmpeg_bin, ffmpeg_temp_path)
+
+        # Add the directory containing FFmpeg to the system's PATH
+        os.environ["PATH"] += os.pathsep + temp_dir
+        
+        return ffmpeg_temp_path
+    else:
+        ffmpeg_path = get_bundle_path('ffmpeg/ffmpeg')
 
 def print_temp_dir():
     if getattr(sys, 'frozen', False):
@@ -82,6 +105,9 @@ def sub():
     if not selected_file:
         print("No file selected!")  # Handle case where no file is selected
         return
+    
+    ffmpeg_path = extract_ffmpeg() 
+
     # Start progress bar
     srt_prog_txt.set("Generating SRT")
     srt_prog.start(20)
@@ -97,8 +123,6 @@ def sub():
         srt_prog_txt.set("Error")
         return
     
-    ffmpeg_dir = os.path.dirname(get_bundle_path('ffmpeg\ffmpeg.exe'))
-    os.environ["PATH"] += os.pathsep + ffmpeg_dir
     
     print(f"FFmpeg path: {ffmpeg_path}")
     if not os.path.exists(ffmpeg_path):
