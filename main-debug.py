@@ -99,10 +99,9 @@ def sub():
     try:
         result = model.transcribe(selected_file, task="translate")
     except FileNotFoundError as e:
-        log_error(f"FileNotFoundError: {selected_file}")
-        srt_prog.stop()
-        srt_prog_txt.set("Error")
-        return
+        print("File not found error:")
+        print(f"Error details: {e}")
+        traceback.print_exc()
     except Exception as e:
         log_error(f"An error occurred: {e}")
         srt_prog.stop()
