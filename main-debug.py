@@ -61,6 +61,7 @@ def select_file():
         inputfile.set(f"Invalid file type. Please select a file with one of the following extensions: {', '.join(ALLOWED_EXTENSIONS)}")
    
 import logging
+import traceback
 
 # Set up logging to log detailed error information to a file
 logging.basicConfig(filename="app_debug.log", level=logging.DEBUG)
