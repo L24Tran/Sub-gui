@@ -12,6 +12,13 @@ import threading
 
 import sv_ttk
 
+import os
+import sys
+import shutil
+import tempfile
+import subprocess
+import logging
+import traceback
 
 
 selected_file = ""
@@ -55,7 +62,11 @@ def extract_ffmpeg():
         
         return ffmpeg_temp_path
     else:
+        # Handle macOS or Linux platform here
         ffmpeg_path = get_bundle_path('ffmpeg/ffmpeg')
+        if not os.path.exists(ffmpeg_path):
+            raise FileNotFoundError(f"FFmpeg executable not found: {ffmpeg_path}")
+        return ffmpeg_path
 
 def print_temp_dir():
     if getattr(sys, 'frozen', False):
@@ -71,7 +82,7 @@ def allowed_file(filename):
     return any(filename.endswith(ext) for ext in ALLOWED_EXTENSIONS)
 
 def select_file():
-# Select input video file to be subtitled
+    # Select input video file to be subtitled
     global selected_file
     selected_file = fd.askopenfilename(title="Select video file to subtitle")
     """ To auto sub without needing additional button
@@ -82,9 +93,7 @@ def select_file():
         inputfile.set('Input video: '+os.path.basename(selected_file))
     else:
         inputfile.set(f"Invalid file type. Please select a file with one of the following extensions: {', '.join(ALLOWED_EXTENSIONS)}")
-   
-import logging
-import traceback
+
 
 # Set up logging to log detailed error information to a file
 #logging.basicConfig(filename="app_debug.log", level=logging.DEBUG)
