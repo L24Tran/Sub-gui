@@ -204,6 +204,7 @@ def burn_subs():
         print("No output file selected!")  # Handle case where no file is selected
         return
 
+    ffmpeg_path = extract_ffmpeg() 
     # Construct the FFmpeg command to burn the subtitles into the video
     ffmpeg_command = [
         ffmpeg_path, 
