@@ -28,6 +28,8 @@ def get_bundle_path(filename):
 # Set ffmpeg_path based on the platform and bundle
 if sys.platform == "win32":  # Windows
     ffmpeg_path = get_bundle_path('ffmpeg/ffmpeg.exe')
+elif sys.platform == "win64":  # Windows
+    ffmpeg_path = get_bundle_path('ffmpeg/ffmpeg.exe')
 elif sys.platform == "darwin":  # macOS
     ffmpeg_path = get_bundle_path('ffmpeg/ffmpeg')
 else:
@@ -96,13 +98,20 @@ def sub():
         srt_prog.stop()
         srt_prog_txt.set("Error")
         return
-
+    
+    try:
+        subprocess.run(['ffmpeg', '-version'], check=True)
+    except FileNotFoundError:
+        print("Error: FFmpeg is not installed.")
+        
+    print(f"FFmpeg path: {ffmpeg_path}")
     try:
         result = model.transcribe(selected_file, task="translate")
     except FileNotFoundError as e:
         print("File not found error:")
         print(f"Error details: {e}")
         traceback.print_exc()
+        return
     except Exception as e:
         log_error(f"An error occurred: {e}")
         srt_prog.stop()
