@@ -31,7 +31,16 @@ if sys.platform == "win32":  # Windows
 elif sys.platform == "darwin":  # macOS
     ffmpeg_path = get_bundle_path('ffmpeg/ffmpeg')
 else:
+    srt_prog_txt.set("FFmpeg path not found. Issue with bundling.")
     raise FileNotFoundError("FFmpeg path not found. Please ensure FFmpeg is bundled with the executable.")
+
+def print_temp_dir():
+    if getattr(sys, 'frozen', False):
+        print(f"Running in a PyInstaller bundle, unpacked to: {sys._MEIPASS}")
+    else:
+        print("Not running in a PyInstaller bundle.")
+        
+print_temp_dir()
 
 # Function to check if the file type is allowed
 ALLOWED_EXTENSIONS = ['.mp4', '.avi', '.mov', '.mkv']
