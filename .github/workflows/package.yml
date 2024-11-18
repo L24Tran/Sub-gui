@@ -93,3 +93,9 @@ jobs:
         with:
           name: windows-exe
           path: dist/main-debug.exe
+
+      - name: Upload warn-main-debug.txt as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: warn-main-debug
+          path: build/main-debug/warn-main-debug.txt

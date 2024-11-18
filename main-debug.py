@@ -27,9 +27,9 @@ def get_bundle_path(filename):
 
 # Set ffmpeg_path based on the platform and bundle
 if sys.platform == "win32":  # Windows
-    ffmpeg_path = get_bundle_path('ffmpeg/ffmpeg.exe')
+    ffmpeg_path = get_bundle_path('ffmpeg\bin\ffmpeg.exe')
 elif sys.platform == "win64":  # Windows
-    ffmpeg_path = get_bundle_path('ffmpeg/ffmpeg.exe')
+    ffmpeg_path = get_bundle_path('ffmpeg\bin\ffmpeg.exe')
 elif sys.platform == "darwin":  # macOS
     ffmpeg_path = get_bundle_path('ffmpeg/ffmpeg')
 else:
@@ -99,7 +99,7 @@ def sub():
         srt_prog_txt.set("Error")
         return
     
-    ffmpeg_dir = os.path.dirname(get_bundle_path('ffmpeg/ffmpeg.exe'))
+    ffmpeg_dir = os.path.dirname(get_bundle_path('ffmpeg\ffmpeg.exe'))
     os.environ["PATH"] += os.pathsep + ffmpeg_dir
     
     print(f"FFmpeg path: {ffmpeg_path}")
