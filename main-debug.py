@@ -92,20 +92,21 @@ def sub():
 
     if not check_file_exists(selected_file):
         log_error(f"Video file not found: {selected_file}")
-        return
-
-    srt_filename = selected_file + ".srt"
-    if not check_file_exists(srt_filename):
-        log_error(f"SRT file not found: {srt_filename}")
+        srt_prog.stop()
+        srt_prog_txt.set("Error")
         return
 
     try:
         result = model.transcribe(selected_file, task="translate")
     except FileNotFoundError as e:
         log_error(f"FileNotFoundError: {selected_file}")
+        srt_prog.stop()
+        srt_prog_txt.set("Error")
         return
     except Exception as e:
         log_error(f"An error occurred: {e}")
+        srt_prog.stop()
+        srt_prog_txt.set("Error")
         return
 
     segments = result['segments']
