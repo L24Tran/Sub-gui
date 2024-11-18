@@ -25,7 +25,7 @@ jobs:
       - name: Download Whisper Assets from GitHub Release
         run: |
             # Download the whisper.zip from GitHub release
-            curl -L -o whisper.zip https://github.com/L24Tran/Sub-gui/releases/download/ffmpeg/whisper.zip
+            curl -L -o whisper.zip https://github.com/L24Tran/Sub-gui/releases/download/Resources/whisper.zip
             
             # Extract the whisper.zip file (skip hidden files like __MACOSX)
             unzip whisper.zip -d whisper
@@ -67,7 +67,7 @@ jobs:
       - name: Download Whisper assets from GitHub Release
         run: |
          # Download the whisper.zip file from the release
-          curl -L -o whisper.zip https://github.com/L24Tran/Sub-gui/releases/download/ffmpeg/whisper.zip
+          curl -L -o whisper.zip https://github.com/L24Tran/Sub-gui/releases/download/Resources/whisper.zip
 
           # Extract whisper.zip into a specific directory
           Expand-Archive -Path whisper.zip -DestinationPath whisper
@@ -85,7 +85,7 @@ jobs:
 
       - name: Bundle the app using PyInstaller
         run: |
-          pyinstaller --onefile --add-data=ffmpeg.exe:ffmpeg --add-data=whisper/whisper/assets/*:whisper/assets main-debug.py
+          pyinstaller --onefile --add-data=ffmpeg.exe:ffmpeg --add-data=whisper/whisper/*:whisper main-debug.py
 
       - name: Upload Windows exe as artifact
         uses: actions/upload-artifact@v4
