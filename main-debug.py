@@ -69,6 +69,12 @@ def log_error(message):
     print(message)  # Still print to console
     logging.error(message)
 
+def check_file_exists(file_path):
+    if not os.path.exists(file_path):
+        print(f"File not found: {file_path}")
+        return False
+    return True
+
 def sub():
 # Transcribe and translate using whisper
     global selected_file
