@@ -99,14 +99,27 @@ def sub():
         srt_prog_txt.set("Error")
         return
     
+    ffmpeg_dir = os.path.dirname(get_bundle_path('ffmpeg/ffmpeg.exe'))
+    os.environ["PATH"] += os.pathsep + ffmpeg_dir
+    
+    print(f"FFmpeg path: {ffmpeg_path}")
+    if not os.path.exists(ffmpeg_path):
+        print("FFmpeg executable not found!")
+    else:
+        print("FFmpeg executable found.")
+
     try:
         subprocess.run(['ffmpeg', '-version'], check=True)
     except FileNotFoundError:
         print("Error: FFmpeg is not installed.")
-        
+
     print(f"FFmpeg path: {ffmpeg_path}")
     try:
         result = model.transcribe(selected_file, task="translate")
+    except OSError as e:
+        print(f'OS ERROR: {e}')
+        traceback.print_exc()
+        return
     except FileNotFoundError as e:
         print("File not found error:")
         print(f"Error details: {e}")

@@ -62,7 +62,8 @@ jobs:
       - name: Download FFmpeg Binary from GitHub Release
         run: |
           # Download the ffmpeg.exe binary from the release URL
-          curl -L -o ffmpeg.exe https://github.com/L24Tran/Sub-gui/releases/download/ffmpeg/ffmpeg.exe
+          curl -L -o ffmpeg.zip https://github.com/L24Tran/Sub-gui/releases/download/ffmpeg/ffmpeg.zip
+          Expand-Archive -Path ffmpeg.zip -DestinationPath ffmpeg
 
       - name: Download Whisper assets from GitHub Release
         run: |
