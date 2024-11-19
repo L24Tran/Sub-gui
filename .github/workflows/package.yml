@@ -44,7 +44,7 @@ jobs:
 
       - name: Bundle the app using PyInstaller
         run: |
-          pyinstaller --onefile --add-binary=ffmpeg/ffmpeg:ffmpeg --add-data=whisper/whisper/assets/*:whisper/assets main-debug.py
+          pyinstaller --onefile --add-data=ffmpeg:ffmpeg --add-data=whisper/whisper/assets/*:whisper/assets main.py
 
       - name: Upload macOS app as artifact
         uses: actions/upload-artifact@v4
@@ -85,7 +85,7 @@ jobs:
 
       - name: Bundle the app using PyInstaller
         run: |
-          pyinstaller --onefile --add-binary=ffmpeg/ffmpeg.exe:ffmpeg --add-data=whisper/whisper:whisper main-debug.py
+          pyinstaller --onefile --add-data=ffmpeg.exe:ffmpeg --add-data=whisper/whisper:whisper main-debug.py
 
       - name: Upload Windows exe as artifact
         uses: actions/upload-artifact@v4
@@ -93,8 +93,4 @@ jobs:
           name: windows-exe
           path: dist/main-debug.exe
 
-      - name: Upload warn-main-debug.txt as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: warn-main-debug
-          path: build/main-debug/warn-main-debug.txt
+
