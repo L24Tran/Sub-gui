@@ -85,12 +85,12 @@ jobs:
 
       - name: Bundle the app using PyInstaller
         run: |
-          pyinstaller --onefile --add-data=ffmpeg.exe:ffmpeg --add-data=whisper/whisper:whisper main-debug.py
+          pyinstaller --onefile --add-data=ffmpeg.exe:ffmpeg --add-data=whisper/whisper:whisper main-gui.py
 
       - name: Upload Windows exe as artifact
         uses: actions/upload-artifact@v4
         with:
           name: windows-exe
-          path: dist/main-debug.exe
+          path: dist/main-gui.exe
 
 
