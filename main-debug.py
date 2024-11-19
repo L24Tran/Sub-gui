@@ -165,7 +165,7 @@ def sub():
         srt_entries.append(srt_entry)
 
     srt_filename = selected_file + ".srt"
-    with open(srt_filename, "w") as f:
+    with open(srt_filename, "w", encoding="utf-8") as f:
         f.write(srt.compose(srt_entries))
 
     # End progress bar and update stats
