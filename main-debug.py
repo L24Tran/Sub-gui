@@ -207,17 +207,17 @@ def burn_subs():
         return
 
     ffmpeg_path = extract_ffmpeg() 
-    ffmpeg_path = os.path.abspath(ffmpeg_path)
+    selected_file = os.path.abspath(selected_file)
     srt_filename = os.path.abspath(srt_filename)  # Get absolute path of the SRT file
     output_file = os.path.abspath(output_file)  # Get absolute path of the output file
     if sys.platform == 'win32' or sys.platform =='win64':  # Only modify if running on Windows
-        srt_filename = srt_filename[3:]  # Remove C: from the start of the path
-        output_file = output_file[3:] 
-        ffmpeg_path = ffmpeg_path[3:]
-    ffmpeg_path = ffmpeg_path.replace("\\", "/")
+        srt_filename = srt_filename[2:]  # Remove C: from the start of the path
+        output_file = output_file[2:]
+        selected_file = selected_file[2:] 
     srt_filename = srt_filename.replace("\\", "/")  # Replace backslashes with forward slashes for FFmpeg
     output_file = output_file.replace("\\", "/")
     print('Forward slash FFmpeg path: ', ffmpeg_path)
+    print('Selected file', selected_file)
     print('Forward slash SRT path: ', srt_filename)
     print('Forward slash output path: ', output_file)
 
