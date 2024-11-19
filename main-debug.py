@@ -198,21 +198,33 @@ def burn_subs():
         return
 
     ffmpeg_path = extract_ffmpeg() 
+    ffmpeg_path = os.path.abspath(ffmpeg_path)
     srt_filename = os.path.abspath(srt_filename)  # Get absolute path of the SRT file
     output_file = os.path.abspath(output_file)  # Get absolute path of the output file
+    print('Absolute FFmpeg path: ', ffmpeg_path)
+    print('Absolute SRT path: ', srt_filename)
+    print('Absolute output path: ', output_file)
     if sys.platform == 'win32' or sys.platform =='win64':  # Only modify if running on Windows
         srt_filename = srt_filename[3:]  # Remove C: from the start of the path
         output_file = output_file[3:] 
+        ffmpeg_path = ffmpeg_path[3:]
+    print('Stripped FFmpeg path: ', ffmpeg_path)
+    print('Stripped SRT path: ', srt_filename)
+    print('Stripped output path: ', output_file)
+    ffmpeg_path = ffmpeg_path.replace("\\", "/")
     srt_filename = srt_filename.replace("\\", "/")  # Replace backslashes with forward slashes for FFmpeg
     output_file = output_file.replace("\\", "/")
+    print('Forward slash FFmpeg path: ', ffmpeg_path)
+    print('Forward slash SRT path: ', srt_filename)
+    print('Forward slash output path: ', output_file)
 
     # Construct the FFmpeg command to burn the subtitles into the video
     ffmpeg_command = [
         ffmpeg_path, 
         "-i", selected_file,  # Input video
-        "-i", srt_filename,  # Input subtitle file
-        "-c:v", "libx264",  # Video codec
-        "-c:a", "aac",  # Audio codec
+        #"-i", srt_filename,  # Input subtitle file
+        #"-c:v", "libx264",  # Video codec
+        #"-c:a", "aac",  # Audio codec
         "-y",  # Overwrite output file if it already exists
         "-vf", f"subtitles={srt_filename}",  # Using subtitles filter for hardcoding subtitles
         output_file  # Output file path
