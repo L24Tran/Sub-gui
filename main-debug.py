@@ -45,7 +45,7 @@ else:
 def extract_ffmpeg():
     if sys.platform == "win32" or sys.platform == "win64":  # Windows
         # The relative path where FFmpeg is bundled within the PyInstaller package
-        ffmpeg_bin = get_bundle_path('ffmpeg\\ffmpeg\\bin\\ffmpeg.exe')
+        ffmpeg_bin = get_bundle_path('ffmpeg\\ffmpeg.exe')
         
         if not os.path.exists(ffmpeg_bin):
             raise FileNotFoundError(f"FFmpeg executable not found at expected location: {ffmpeg_bin}")
@@ -95,9 +95,6 @@ def select_file():
         inputfile.set(f"Invalid file type. Please select a file with one of the following extensions: {', '.join(ALLOWED_EXTENSIONS)}")
 
 
-# Set up logging to log detailed error information to a file
-#logging.basicConfig(filename="app_debug.log", level=logging.DEBUG)
-
 def log_error(message):
     print(message)  # Still print to console
     logging.error(message)
@@ -121,9 +118,6 @@ def sub():
     srt_prog_txt.set("Generating SRT")
     srt_prog.start(20)
     
-    if not os.path.exists(selected_file):
-        print(f"Selected file does not exist: {selected_file}")
-    
     model = whisper.load_model('small')
 
     if not check_file_exists(selected_file):
@@ -144,7 +138,6 @@ def sub():
     except FileNotFoundError:
         print("Error: FFmpeg is not installed.")
 
-    print(f"FFmpeg path: {ffmpeg_path}")
     try:
         result = model.transcribe(selected_file, task="translate")
     except OSError as e:
@@ -205,6 +198,11 @@ def burn_subs():
         return
 
     ffmpeg_path = extract_ffmpeg() 
+    srt_filename = os.path.abspath(srt_filename)  # Get absolute path of the SRT file
+    srt_filename = srt_filename.replace("\\", "/")  # Replace backslashes with forward slashes for FFmpeg
+    output_file = os.path.abspath(output_file)  # Get absolute path of the output file
+    output_file = output_file.replace("\\", "/")
+    
     # Construct the FFmpeg command to burn the subtitles into the video
     ffmpeg_command = [
         ffmpeg_path, 
@@ -212,7 +210,6 @@ def burn_subs():
         "-i", srt_filename,  # Input subtitle file
         "-c:v", "libx264",  # Video codec
         "-c:a", "aac",  # Audio codec
-        "-c:s", "mov_text",  # Subtitle codec for MP4
         "-y",  # Overwrite output file if it already exists
         "-vf", f"subtitles={srt_filename}",  # Using subtitles filter for hardcoding subtitles
         output_file  # Output file path
