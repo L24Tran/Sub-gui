@@ -133,23 +133,32 @@ def sub():
     else:
         print("FFmpeg executable found.")
 
-    try:
-        subprocess.run(['ffmpeg', '-version'], check=True)
-    except FileNotFoundError:
-        print("Error: FFmpeg is not installed.")
+    #try:
+    #    subprocess.run(['ffmpeg', '-version'], check=True)
+    #except FileNotFoundError:
+    #    print("Error: FFmpeg is not installed.")
 
     try:
         result = model.transcribe(selected_file, task="translate")
-    except OSError as e:
+        print("Transcription successful")
+        print(result)  # Check the result
+    except Exception as e:
+        print(f"Error transcribing file: {e}")
+        traceback.print_exc()
+        return
+
+    #try:
+        result = model.transcribe(selected_file, task="translate")
+    #except OSError as e:
         print(f'OS ERROR: {e}')
         traceback.print_exc()
         return
-    except FileNotFoundError as e:
+    #except FileNotFoundError as e:
         print("File not found error:")
         print(f"Error details: {e}")
         traceback.print_exc()
         return
-    except Exception as e:
+    #except Exception as e:
         log_error(f"An error occurred: {e}")
         srt_prog.stop()
         srt_prog_txt.set("Error")
@@ -201,16 +210,10 @@ def burn_subs():
     ffmpeg_path = os.path.abspath(ffmpeg_path)
     srt_filename = os.path.abspath(srt_filename)  # Get absolute path of the SRT file
     output_file = os.path.abspath(output_file)  # Get absolute path of the output file
-    print('Absolute FFmpeg path: ', ffmpeg_path)
-    print('Absolute SRT path: ', srt_filename)
-    print('Absolute output path: ', output_file)
     if sys.platform == 'win32' or sys.platform =='win64':  # Only modify if running on Windows
         srt_filename = srt_filename[3:]  # Remove C: from the start of the path
         output_file = output_file[3:] 
         ffmpeg_path = ffmpeg_path[3:]
-    print('Stripped FFmpeg path: ', ffmpeg_path)
-    print('Stripped SRT path: ', srt_filename)
-    print('Stripped output path: ', output_file)
     ffmpeg_path = ffmpeg_path.replace("\\", "/")
     srt_filename = srt_filename.replace("\\", "/")  # Replace backslashes with forward slashes for FFmpeg
     output_file = output_file.replace("\\", "/")
