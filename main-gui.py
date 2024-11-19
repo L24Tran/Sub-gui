@@ -98,8 +98,8 @@ def sub():
     
     try:
         result = model.transcribe(selected_file, task="translate")
-        print("Transcription successful")
-        print(result)  # Check the result
+        #print("Transcription successful")
+        #print(result)  # Check the result
     except Exception as e:
         print(f"Error transcribing file: {e}")
         traceback.print_exc()
