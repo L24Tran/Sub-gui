@@ -199,10 +199,13 @@ def burn_subs():
 
     ffmpeg_path = extract_ffmpeg() 
     srt_filename = os.path.abspath(srt_filename)  # Get absolute path of the SRT file
-    srt_filename = srt_filename.replace("\\", "/")  # Replace backslashes with forward slashes for FFmpeg
     output_file = os.path.abspath(output_file)  # Get absolute path of the output file
+    if sys.platform == 'win32' or sys.platform =='win64':  # Only modify if running on Windows
+        srt_filename = srt_filename[3:]  # Remove C: from the start of the path
+        output_file = output_file[3:] 
+    srt_filename = srt_filename.replace("\\", "/")  # Replace backslashes with forward slashes for FFmpeg
     output_file = output_file.replace("\\", "/")
-    
+
     # Construct the FFmpeg command to burn the subtitles into the video
     ffmpeg_command = [
         ffmpeg_path, 
